@@ -1,0 +1,58 @@
+{% extends 'base/base.html' %}
+{% block load %}
+	{% load my_filters %}
+{% endblock %}
+
+{% block title %}
+Listado API
+{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<td>#</td>
+			<td>Nombre</td>
+			<td>Dirección</td>
+			<td>M2 de Superficie</td>
+			<td>Email de contacto</td>
+		</tr>
+
+	<tbody>
+        {% if results_list %}
+        {% for r in results_list %}
+		<tr>
+            <td>{{ r|get_item:'id' }}</td>
+            <td>{{ r|get_item:'nombre' }}</td>
+            <td>{{ r|get_item:'direccion' }}</td>
+            <td>{{ r|get_item:'superficie' }}</td>
+            <td>{{ r|get_item:'email' }}</td>
+        </tr>
+        {% endfor %}
+
+        {% else %}
+            <h1>No hay registros de resultados</h1>
+
+        {% endif %}
+	</tbody>
+</table>
+<p align="center">Existen {{results_list.paginator.count }} elementos </p>
+<ul class="pager">
+	<li>
+		{% if results_list.has_previous %}
+		  <a href="?page=1">&laquo;</a>
+       	  <a href="?page={{ results_list.previous_page_number }}">Anterior</a>
+		{% endif %}
+    </li>
+    <span class="page-current">
+        Página {{ results_list.number }} de {{ results_list.paginator.num_pages }}
+    </span>
+	<li>
+		{% if results_list.has_next %}
+     	  <a href="?page={{ results_list.next_page_number }}">Siguiente</a>
+		  <a href="?page={{ results_list.paginator.num_pages }}">&raquo;</a>
+    	{% endif %}
+    </li>
+</ul>
+{% endblock %}
